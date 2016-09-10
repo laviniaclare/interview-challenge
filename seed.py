@@ -62,12 +62,18 @@ def load_specs(specfiles):
 
 
 def load_data(datafiles):
-	path = "/data"
+	path = "data/"
 
 	for datafile in datafiles:
 		print datafile
+		data = open(path+datafile)
 		# find table data belongs in
-		# add data to table
+		table_name = datafile.split('_')[0]
+		print table_name
+
+		for row in data.readlines():
+			print row
+			print row[-5:].strip()
 
 
 def connect_to_db():
