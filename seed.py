@@ -23,27 +23,47 @@ City varchar(255)
 ########################################################
 
 def load_specs(specfiles):
-	path = "specs/"
+	path = 'specs/'
 	for specfile in specfiles:
-		#remove '.csv' from end to get table name and change first letter to uppercase
-		table_name = specfile[:-4].title()
+		#remove '.csv' from end to get table name
+		table_name = specfile[:-4]
 		#open file with table specs
 		table_specs = open(path+specfile)
 
 		query = """CREATE TABLE %s (""" % table_name
 
 		for line in table_specs.readlines()[1:]:
-			column = line.split(",")
-			print column
+			column = line.strip().split(",")
 			column_name = column[0]
-			print column_name
-			#create table in db with specs
+			column_width = column[1]
+			column_type = column[2]
 
-		query += ");"
-		print query
+
+			if column_type == 'TEXT':
+				column_type = 'VARCHAR'
+
+			# TODO: Add check for all types that take len args perhaps with set containing column type names.
+			# can then check if column type in "column_type_takes_args"
+			if column_type == 'VARCHAR':
+				column_string = '%s %s(%s), ' % (column_name, column_type, column_width)
+			else:
+				column_string = '%s %s, ' % (column_name, column_type)
+
+			query += column_string
+
+		#remove extra space and comma from last column
+		query = query[:-2]
+		query += ');'
+
+		cur = conn.cursor()
+		cur.execute(query)
+		conn.commit()
+		cur.close()
 
 
 def load_data(datafiles):
+	path = "/data"
+
 	for datafile in datafiles:
 		print datafile
 		# find table data belongs in
@@ -64,10 +84,12 @@ if __name__=="__main__":
 	conn = connect_to_db()
 
 	if conn:
-		specfiles = os.listdir("specs")
-		load_specs(specfiles)
+		# specfiles = os.listdir("specs")
+		# load_specs(specfiles)
+		# print "created tables"
 
-		# datafiles = os.listdir("data")
-		# load_data(datafiles)
+		datafiles = os.listdir("data")
+		load_data(datafiles)
+		print "loaded data"
 		
 		conn.close()
