@@ -155,4 +155,5 @@ if __name__=="__main__":
 	if conn:
 		cur = conn.cursor()
 		populate_db()
+		cur.close()
 		conn.close()
