@@ -65,17 +65,15 @@ def create_table(table_name, schema):
 	query += ');'
 
 	# execute query and commit changes
-	cur = conn.cursor()
 	cur.execute(query)
 	conn.commit()
-	cur.close()
 
 
 
 def load_table_data(table_name, table_schema):
 	"""Takes in a table name and schema and inserts data from data files into table"""
 
-	print "\n\n LOADING DATA INTO TABLE ", table_name
+	print "\n\nLOADING DATA INTO TABLE ", table_name
 	
 	# get list of file objects with data to be added to given table. 
 	table_data_files = [open("data/"+file_name) for file_name in os.listdir("data") if file_name.startswith(table_name)]
@@ -95,7 +93,7 @@ def insert_row_into_table(row, table_name, table_schema):
 	"""Takes in row (represented by a string), table name (string), and table_schema (list of tuples) and
 	inserts data from row into the table."""
 
-	print "\n\n\n LOADING ROW", row, "\n\n"
+	print "\nLOADING ROW", row
 
 	# creating start of query strings to be added to
 	insert_into = """INSERT INTO %s (""" % table_name
@@ -136,10 +134,8 @@ def insert_row_into_table(row, table_name, table_schema):
 	full_query = insert_into + values
 
 	# execute query and commit changes
-	cur = conn.cursor()
 	cur.execute(full_query)
 	conn.commit()
-	cur.close()
 
 
 def connect_to_db(db_name = 'clover'):
@@ -157,5 +153,6 @@ if __name__=="__main__":
 	conn = connect_to_db()
 
 	if conn:
+		cur = conn.cursor()
 		populate_db()
 		conn.close()
