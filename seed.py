@@ -22,6 +22,23 @@ City varchar(255)
 
 ########################################################
 
+def populate_db():
+	# for each file in specs
+		# create the table
+		# load data into table
+
+		# will need to use column width in table to determine where each column ends in txt files
+	pass
+
+def create_schema(schemafile):
+	"""takes in a file, returns data structure (dictionary? tuples?) representing schema"""
+	pass
+
+def create_table(table_name, schema):
+	"""takes in name, schema, creates table in db"""
+	pass
+
+
 def load_specs(specfiles):
 	path = 'specs/'
 	for specfile in specfiles:
@@ -76,9 +93,9 @@ def load_data(datafiles):
 			print row[-5:].strip()
 
 
-def connect_to_db():
+def connect_to_db(db_name = 'clover'):
 	try:
-		conn = psycopg2.connect("dbname='clover' host='localhost'")
+		conn = psycopg2.connect("dbname='%s' host='localhost'" % db_name)
 		print "connected to db"
 		return conn
 	except:
