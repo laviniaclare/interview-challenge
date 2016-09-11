@@ -99,68 +99,54 @@ def load_table_data(table_name, table_schema):
 
 
 def insert_row_into_table(row, table_name, table_schema):
+	"""Takes in row (represented by a string), table name (string), and table_schema (list of tuples) and
+	inserts data from row into the table."""
 
-	query 
+	print "\n\n\n LOADING ROW", row, "\n\n"
+
+	# creating start of query strings to be added to
+	insert_into = """INSERT INTO %s (""" % table_name
+	values = """ VALUES ("""
+
+	# Looping through each column in the schema to add column name and value to query strings
 	for column in table_schema:
-		colum_name = table_schema[0]
-		column_width = table_schema[1]
+		colum_name = column[0]
+		column_width = int(column[1])
+		column_type = column[2]
+		column_value = row[:column_width].strip()
 
+		# We want to store True or False in the db, but bools are represented as 1 or 0 in data text files
+		# so we much convert them to True or False values before inserting into db
+		if column_type == "BOOLEAN":
+			# I'm assumeing here that booleans will always be represented by 1 or 0 in data text files.
+			# if this is not the case the conversion from string to int could throw an error.
+			column_value = bool(int(column_value))
 
+		insert_into += "%s, " % colum_name
 
+		# if the column is a varchar type we need to put single quotes around the value, otherwise not quotes needed.
+		if column_type == "VARCHAR":
+			values += "'%s', " % column_value
+		else:
+			values += "%s, " % column_value
 
+		row = row[column_width:]
 
-def load_specs(specfiles):
-	path = 'specs/'
-	for specfile in specfiles:
-		#remove '.csv' from end to get table name
-		table_name = specfile[:-4]
-		#open file with table specs
-		table_specs = open(path+specfile)
+	# Remove extra comma and space from end
+	insert_into = insert_into[:-2]
+	insert_into += ')'
+	# Remove extra comma and space from end
+	values = values[:-2]
+	values += ');'
 
-		query = """CREATE TABLE %s (""" % table_name
+	# combine insert into and values to get full query
+	full_query = insert_into + values
 
-		for line in table_specs.readlines()[1:]:
-			column = line.strip().split(",")
-			column_name = column[0]
-			column_width = column[1]
-			column_type = column[2]
-
-
-			if column_type == 'TEXT':
-				column_type = 'VARCHAR'
-
-			# TODO: Add check for all types that take len args perhaps with set containing column type names.
-			# can then check if column type in "column_type_takes_args"
-			if column_type == 'VARCHAR':
-				column_string = '%s %s(%s), ' % (column_name, column_type, column_width)
-			else:
-				column_string = '%s %s, ' % (column_name, column_type)
-
-			query += column_string
-
-		#remove extra space and comma from last column
-		query = query[:-2]
-		query += ');'
-
-		cur = conn.cursor()
-		cur.execute(query)
-		conn.commit()
-		cur.close()
-
-
-def load_data(datafiles):
-	path = "data/"
-
-	for datafile in datafiles:
-		print datafile
-		data = open(path+datafile)
-		# find table data belongs in
-		table_name = datafile.split('_')[0]
-		print table_name
-
-		for row in data.readlines():
-			print row
-			print row[-5:].strip()
+	# execute query and commit changes
+	cur = conn.cursor()
+	cur.execute(full_query)
+	conn.commit()
+	cur.close()
 
 
 def connect_to_db(db_name = 'clover'):
