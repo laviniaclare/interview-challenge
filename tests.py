@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 import sys
 import seed
 
@@ -48,8 +49,11 @@ class CreationTests(unittest.TestCase):
         self.assertEqual(colnames, ['firstname', 'lastname', 'age', 'active'])
 
     def test_create_table_schema(self):
-        # requires fake specfile object
-        pass
+        schema_file = tempfile.TemporaryFile()
+        schema_file.write('"column name",width,datatype\nname,10,TEXT\nvalid,1,BOOLEAN\ncount,3,INTEGER')
+        schema_file.seek(0)
+        schema = seed.create_table_schema(schema_file)
+        self.assertEqual(schema, [('name', '10', 'VARCHAR'), ('valid', '1', 'BOOLEAN'), ('count', '3', 'INTEGER')])
 
 
 class InsertionTests(unittest.TestCase):
@@ -132,20 +136,8 @@ class InsertionTests(unittest.TestCase):
 
         self.assertEqual(("Foonyor", True, 1), results)
 
-
-    def test_load_table_data_with_real_file(self):
-        # having our test run on our real file system could be slow if there are
-        # lots of files in our folders, which is not ideal. However,
-        # it does verify that there is nothing wrong with our file system.
+    def test_load_table_data_with_(self):
         pass
-
-
-    def test_load_table_data_with_mock(self):
-        # this test woul require a mock of some sort for the data folder.
-        # it will run at a relatively consistant speed no matter how many
-        # files are dropped into our real data and spec folders.
-        pass
-
 
 class PopulateDBTests(unittest.TestCase):
 
