@@ -49,11 +49,17 @@ class CreationTests(unittest.TestCase):
         self.assertEqual(colnames, ['firstname', 'lastname', 'age', 'active'])
 
     def test_create_table_schema(self):
+        # creating temporary file object to feed into create_table_schema
         schema_file = tempfile.TemporaryFile()
+        # adding example schema text to temporary file object
         schema_file.write('"column name",width,datatype\nname,10,TEXT\nvalid,1,BOOLEAN\ncount,3,INTEGER')
+        # setting file object cursor to start of file
         schema_file.seek(0)
+
         schema = seed.create_table_schema(schema_file)
         self.assertEqual(schema, [('name', '10', 'VARCHAR'), ('valid', '1', 'BOOLEAN'), ('count', '3', 'INTEGER')])
+
+        schema_file.close()
 
 
 class InsertionTests(unittest.TestCase):
@@ -83,7 +89,6 @@ class InsertionTests(unittest.TestCase):
                     ]
         for table in self.tables:
             seed.create_table(table["name"], table["schema"])
-
 
     def tearDown(self):
         try:
@@ -136,8 +141,10 @@ class InsertionTests(unittest.TestCase):
 
         self.assertEqual(("Foonyor", True, 1), results)
 
-    def test_load_table_data_with_(self):
+    def test_load_table_data(self):
+        # load_table_data(table_name, table_schema, path="data/")
         pass
+
 
 class PopulateDBTests(unittest.TestCase):
 
