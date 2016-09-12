@@ -4,7 +4,7 @@ import seed
 
 
 class CreationTests(unittest.TestCase):
-    """Tests for my party site."""
+    """Tests table creation function and schema creation function"""
 
     def setUp(self):
         """Connect to testing db"""
@@ -53,12 +53,9 @@ class CreationTests(unittest.TestCase):
     def test_create_table_schema(self):
         pass
 
-    
-    def test_populate_db(self):
-        pass
-
 
 class InsertionTests(unittest.TestCase):
+    """Tests that insert data into tables that already exist"""
 
     def setUp(self):
         """Connect to testing db"""
@@ -114,6 +111,17 @@ class InsertionTests(unittest.TestCase):
     def test_load_table_data(self):
         pass
 
+
+class PopulateDBTests(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_populate_db(self):
+        pass
 
 
 if __name__ == "__main__":
