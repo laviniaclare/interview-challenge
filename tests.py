@@ -14,7 +14,6 @@ class CreationTests(unittest.TestCase):
         # setting cur and conn in seed to test cur and conn (if we don't do this we get a 'cur is undefined' error)
         seed.cur = self.conn.cursor()
         seed.conn = self.conn
-        
 
     def tearDown(self):
         try:
@@ -34,22 +33,20 @@ class CreationTests(unittest.TestCase):
         # not sure if line below is needed, but better safe than sorry
         seed.conn.close()
 
-    
     def test_create_table_with_bool_int_and_varchar_column_types(self):
         # making fake table name and schema
         table_name = "people"
         table_schema = [("firstname", "10", "VARCHAR"), ("lastname", "10", "VARCHAR"), ("age", "3", "INTEGER"), ("active", "1", "BOOLEAN")]
-        
+
         # running function with fake table name and schema
         seed.create_table(table_name, table_schema)
 
         # testing that table has been created and column names are as expected
         self.cur.execute("""SELECT * FROM people LIMIT 0""")
         colnames = [desc[0] for desc in self.cur.description]
-        
+
         self.assertEqual(colnames, ['firstname', 'lastname', 'age', 'active'])
 
-    
     def test_create_table_schema(self):
         # requires fake specfile object
         pass
@@ -67,22 +64,22 @@ class InsertionTests(unittest.TestCase):
         seed.conn = self.conn
 
         self.tables = [
-                    {
-                    "name": "people", 
-                    "schema": [("firstname", "10", "VARCHAR"), ("lastname", "10", "VARCHAR"), ("age", "3", "INTEGER"), ("active", "1", "BOOLEAN")]
-                    },
-                    {
-                    "name": "animals",
-                    "schema": [("animal_id", "7", "INTEGER"), ("name", "10", "VARCHAR"), ("species", "20", "VARCHAR")]
-                    },
-                    {
-                    "name":"testformat1",
-                    "schema": [("name", "10", "VARCHAR"), ("valid", "1", "BOOLEAN"), ("count", "3", "INTEGER")]
-                    }
-                ]
+                        {
+                        "name": "people", 
+                        "schema": [("firstname", "10", "VARCHAR"), ("lastname", "10", "VARCHAR"), ("age", "3", "INTEGER"), ("active", "1", "BOOLEAN")]
+                        },
+                        {
+                        "name": "animals",
+                        "schema": [("animal_id", "7", "INTEGER"), ("name", "10", "VARCHAR"), ("species", "20", "VARCHAR")]
+                        },
+                        {
+                        "name":"testformat1",
+                        "schema": [("name", "10", "VARCHAR"), ("valid", "1", "BOOLEAN"), ("count", "3", "INTEGER")]
+                        }
+                    ]
         for table in self.tables:
             seed.create_table(table["name"], table["schema"])
-        
+
 
     def tearDown(self):
         try:
@@ -136,8 +133,17 @@ class InsertionTests(unittest.TestCase):
         self.assertEqual(("Foonyor", True, 1), results)
 
 
-    def test_load_table_data(self):
-        # this test will require a mock of some sort for the data folder.
+    def test_load_table_data_with_real_file(self):
+        # having our test run on our real file system could be slow if there are
+        # lots of files in our folders, which is not ideal. However,
+        # it does verify that there is nothing wrong with our file system.
+        pass
+
+
+    def test_load_table_data_with_mock(self):
+        # this test woul require a mock of some sort for the data folder.
+        # it will run at a relatively consistant speed no matter how many
+        # files are dropped into our real data and spec folders.
         pass
 
 
