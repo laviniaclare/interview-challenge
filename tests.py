@@ -35,7 +35,7 @@ class CreationTests(unittest.TestCase):
         seed.conn.close()
 
     
-    def test_create_table(self):
+    def test_create_table_with_bool_int_and_varchar_column_types(self):
         # making fake table name and schema
         table_name = "people"
         table_schema = [("firstname", "10", "VARCHAR"), ("lastname", "10", "VARCHAR"), ("age", "3", "INTEGER"), ("active", "1", "BOOLEAN")]
@@ -51,6 +51,7 @@ class CreationTests(unittest.TestCase):
 
     
     def test_create_table_schema(self):
+        # requires fake specfile object
         pass
 
 
@@ -73,6 +74,10 @@ class InsertionTests(unittest.TestCase):
                     {
                     "name": "animals",
                     "schema": [("animal_id", "7", "INTEGER"), ("name", "10", "VARCHAR"), ("species", "20", "VARCHAR")]
+                    },
+                    {
+                    "name":"testformat1",
+                    "schema": [("name", "10", "VARCHAR"), ("valid", "1", "BOOLEAN"), ("count", "3", "INTEGER")]
                     }
                 ]
         for table in self.tables:
@@ -108,13 +113,38 @@ class InsertionTests(unittest.TestCase):
 
         self.assertEqual((1, "Fido", "dog"), results)
 
+    def test_insert_row_with_bool_false_into_table(self):
+        row = "Barzane   0-12"
+
+        seed.insert_row_into_table(row, "testformat1", self.tables[2]["schema"])
+
+        query = """SELECT * FROM testformat1;"""
+        seed.cur.execute(query)
+        results = seed.cur.fetchone()
+
+        self.assertEqual(("Barzane", False, -12), results)
+
+    def test_insert_row_with_bool_true_into_table(self):
+        row = "Foonyor   1  1"
+
+        seed.insert_row_into_table(row, "testformat1", self.tables[2]["schema"])
+
+        query = """SELECT * FROM testformat1;"""
+        seed.cur.execute(query)
+        results = seed.cur.fetchone()
+
+        self.assertEqual(("Foonyor", True, 1), results)
+
+
     def test_load_table_data(self):
+        # this test will require a mock of some sort for the data folder.
         pass
 
 
 class PopulateDBTests(unittest.TestCase):
 
     def setUp(self):
+        # will need fake data and spec folders
         pass
 
     def tearDown(self):

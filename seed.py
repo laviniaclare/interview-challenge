@@ -2,7 +2,7 @@ import psycopg2
 import os
 
 
-def populate_db():
+def populate_db(path="specs/"):
 	""""Populates database using files in spec folder and data folder"""
 	specfiles = os.listdir("specs")
 	
@@ -10,7 +10,7 @@ def populate_db():
 		#remove '.csv' from end to get table name
 		table_name = specfile[:-4]
 		#open file with table specs representing table schema
-		table_specs = open('specs/'+specfile)		
+		table_specs = open(path+specfile)		
 		# create schema to be used by create table function and load data function
 		table_schema = create_table_schema(table_specs)
 		# create the table in db
@@ -70,13 +70,13 @@ def create_table(table_name, schema):
 
 
 
-def load_table_data(table_name, table_schema):
+def load_table_data(table_name, table_schema, path="data/"):
 	"""Takes in a table name and schema and inserts data from data files into table"""
 
 	print "\n\nLOADING DATA INTO TABLE ", table_name
 	
 	# get list of file objects with data to be added to given table. 
-	table_data_files = [open("data/"+file_name) for file_name in os.listdir("data") if file_name.startswith(table_name)]
+	table_data_files = [open(path+file_name) for file_name in os.listdir(path[:-1]) if file_name.startswith(table_name)]
 
 	# NOTE: Does not take into account data added. if this function were run periodically as data files were added, 
 	# taking date into account would be necessary to avoid duplicate data entry. 
