@@ -141,8 +141,11 @@ class InsertionTests(unittest.TestCase):
 
         self.assertEqual(("Foonyor", True, 1), results)
 
-    def test_load_table_data(self):
+    def test_load_table_data_one_data_file(self):
         # load_table_data(table_name, table_schema, path="data/")
+        # will need to use named temp files, and mock out a directory object
+        # to hold them.
+
         pass
 
 
