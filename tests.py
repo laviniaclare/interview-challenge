@@ -135,17 +135,16 @@ class InsertionTests(unittest.TestCase):
 
         seed.insert_row_into_table(row, "testformat1", self.tables[2]["schema"])
 
-        query = """SELECT * FROM testformat1;"""
+        query = """SELECT * FROM testformat1 LIMIT 1;"""
         seed.cur.execute(query)
         results = seed.cur.fetchone()
 
         self.assertEqual(("Foonyor", True, 1), results)
 
     def test_load_table_data_one_data_file(self):
-        # load_table_data(table_name, table_schema, path="data/")
+        # load_table_data takes in table_name, table_schema, path="data/"
         # will need to use named temp files, and mock out a directory object
         # to hold them.
-
         pass
 
 
