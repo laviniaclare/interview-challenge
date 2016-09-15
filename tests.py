@@ -143,12 +143,13 @@ class InsertionTests(unittest.TestCase):
 
     def test_load_table_data_one_data_file(self):
         # TODO: load_table_data takes in table_name, table_schema, path="data/"
-        # will need to use named temp files for data files, and mock out a directory 
+        # will need to use named temp files for data files, and mock out a directory
         # object to hold them.
         pass
 
 
 class PopulateDBTests(unittest.TestCase):
+    # TODO: figure out mocking, fill out functions.
 
     def setUp(self):
         # will need fake data and spec folders. Perhaps they can be mocked?
