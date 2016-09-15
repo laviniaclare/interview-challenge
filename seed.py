@@ -3,7 +3,7 @@ import os
 
 
 def populate_db(path="specs/"):
-    """"Populates database using files in spec folder and data folder"""
+    """"Populates database using files in specs folder and data folder"""
     specfiles = os.listdir("specs")
 
     for specfile in specfiles:
@@ -33,7 +33,7 @@ def create_table_schema(specfile):
 
         if column_type == 'TEXT':
             # postgres does not recognize type "TEXT", so I chose to change it to "VARCHAR", which is meant
-            # to represent stings of varying length and will require us to specify a max length.
+            # to represent strings of varying length and will require us to specify a max length.
             column_type = 'VARCHAR'
 
         schema.append((column_name, column_width, column_type))
@@ -52,10 +52,10 @@ def create_table(table_name, schema):
     # looping through columns in schema to construct full CREATE TABLE query
     for column in schema:
         if column[2] == 'VARCHAR':
-            # varchar takes in an argument max lenght, so if our column is that type we need to provide it.
+            # varchar takes in an argument max length, so if our column is that type we need to provide it.
             column_string = '%s %s(%s), ' % (column[0], column[2], column[1])
         else:
-            # booleans and integers do not take in a parameters.
+            # booleans and integers do not take in any parameters.
             column_string = '%s %s, ' % (column[0], column[2])
 
         query += column_string
