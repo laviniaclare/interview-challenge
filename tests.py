@@ -142,22 +142,25 @@ class InsertionTests(unittest.TestCase):
         self.assertEqual(("Foonyor", True, 1), results)
 
     def test_load_table_data_one_data_file(self):
-        # load_table_data takes in table_name, table_schema, path="data/"
-        # will need to use named temp files, and mock out a directory object
-        # to hold them.
+        # TODO: load_table_data takes in table_name, table_schema, path="data/"
+        # will need to use named temp files for data files, and mock out a directory 
+        # object to hold them.
         pass
 
 
 class PopulateDBTests(unittest.TestCase):
 
     def setUp(self):
-        # will need fake data and spec folders
+        # will need fake data and spec folders. Perhaps they can be mocked?
         pass
 
     def tearDown(self):
         pass
 
     def test_populate_db(self):
+        # Function call to load data in "populate_db" uses the "/data" directory
+        # will need to figure out how to trick it to use a fake data directory
+        # instead.
         pass
 
 
