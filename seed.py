@@ -78,10 +78,12 @@ def load_table_data(table_name, table_schema, path="data/"):
     # get list of file objects with data to be added to given table.
     table_data_files = [open(path+file_name) for file_name in os.listdir(path[:-1]) if file_name.startswith(table_name)]
 
-    # NOTE: Does not take into account data added. if this function were run periodically as data files were added,
+    # NOTE: Does not take into account data added, only which table the data file
+    # goes with. If this function were run periodically as data files were added,
     # taking date into account would be necessary to avoid duplicate data entry.
 
-    # each data file may contain multiple rows of data so we loop through each file, and each row in that file
+    # each data file may contain multiple rows of data so we loop through each file, 
+    # and each row in that file
     for data_file in table_data_files:
         data = data_file.readlines()
         # insert data one row at a time. Is there a more efficient way to do this?
@@ -95,7 +97,7 @@ def insert_row_into_table(row, table_name, table_schema):
 
     print "\nLOADING ROW", row
 
-    # creating start of query strings to be added to
+    # creating start of query strings
     insert_into = """INSERT INTO %s (""" % table_name
     values = """ VALUES ("""
 
@@ -106,16 +108,19 @@ def insert_row_into_table(row, table_name, table_schema):
         column_type = column[2]
         column_value = row[:column_width].strip()
 
-        # If column type is boolean want to store True or False in the db, but bools are represented as 1 or 0 in data
-        # text files so we much convert them to True or False values before inserting into db
+        # If column type is boolean we want to store True or False in the db, but 
+        # bools are represented as 1 or 0 in data text files so we must convert 
+        # them to True or False values before inserting into db
         if column_type == "BOOLEAN":
-            # I'm assumeing here that booleans will always be represented by 1 or 0 in data text files.
-            # if this is not the case the conversion from string to int could throw an error.
+            # I'm assumeing here that booleans will always be represented by 1 or 0 
+            # in data text files. If this is not the case the conversion from string 
+            # to int could throw an error.
             column_value = bool(int(column_value))
 
         insert_into += "%s, " % colum_name
 
-        # if the column is a varchar type we need to put single quotes around the value, otherwise not quotes needed.
+        # if the column is a varchar type we need to put single quotes around the value, 
+        # otherwise we do not want quotation marks.
         if column_type == "VARCHAR":
             values += "'%s', " % column_value
         else:
