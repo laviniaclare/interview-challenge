@@ -1,0 +1,4 @@
+Chester   Bashkir Curly       5 1 2A
+Armand    Budenny             1 0 1F
+Kirk      Nokota              2 0 2D
+Saphine   Akhal-Teke          9 1 2B
